@@ -1,0 +1,13 @@
+---
+profile_mysql_server::create_mysql_home: true
+profile_mysql_server::dbs: {}
+profile_mysql_server::manage_yumrepo: false
+profile_mysql_server::mysql_gid: null
+profile_mysql_server::mysql_groupname: "mysql"
+profile_mysql_server::mysql_home: "/var/lib/mysql"
+profile_mysql_server::mysql_logdir: "/var/log/mariadb"
+profile_mysql_server::mysql_rundir: "/var/run/mariadb"
+profile_mysql_server::mysql_uid: null
+profile_mysql_server::mysql_username: "mysql"
+profile_mysql_server::other_dependencies: []
+profile_mysql_server::yumrepo: {}
