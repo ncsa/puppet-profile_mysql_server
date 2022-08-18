@@ -76,7 +76,7 @@ class profile_mysql_server (
 
   include ::mysql::server
 
-  if ($mysql_gid) and ($mysql_uid) {
+  #if ($mysql_gid) and ($mysql_uid) {
     # if both $mysql_gid and $mysql_uid, create various directories
     # and manage user and group
 
@@ -137,17 +137,17 @@ class profile_mysql_server (
       comment        => 'MySQL server',
     }
 
-  } elsif $mysql_gid {
+  #} elsif $mysql_gid {
 
     # we've specified $mysql_gid but NOT $mysql_uid
-    fail('you must provide both (or neither) mysql_gid and mysql_uid')
+    #fail('you must provide both (or neither) mysql_gid and mysql_uid')
 
-  } elsif $mysql_uid {
+  #} elsif $mysql_uid {
 
     # we've specified $mysql_uid but NOT $mysql_gid
-    fail('you must provide both (or neither) mysql_gid and mysql_uid')
+    #fail('you must provide both (or neither) mysql_gid and mysql_uid')
 
-  }
+  #}
 
   $other_dependencies.each | $dep | {
     $dep -> Class['::mysql::server::install']
