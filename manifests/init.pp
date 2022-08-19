@@ -76,15 +76,11 @@ class profile_mysql_server (
 
   include ::mysql::server
 
-  #if ($mysql_gid) and ($mysql_uid) {
-    # if both $mysql_gid and $mysql_uid, create various directories
-    # and manage user and group
-
     $dir_defaults = {
       before => Class['::mysql::server::install'],
       ensure => directory,
-      group  => $mysql_gid,
-      owner  => $mysql_uid,
+      group  => $mysql_groupname,
+      owner  => $mysql_username,
     }
 
     if $mysql_logdir {
@@ -120,14 +116,14 @@ class profile_mysql_server (
     group { $mysql_groupname:
       ensure => 'present',
       before => Class['::mysql::server::install'],
-      gid    => $mysql_gid,
+      gid    => $mysql_groupname,
     }
 
     user { $mysql_username:
       ensure         => 'present',
       before         => Class['::mysql::server::install'],
-      uid            => $mysql_uid,
-      gid            => $mysql_gid,
+      uid            => $mysql_username,
+      gid            => $mysql_groupname,
       forcelocal     => true,
       home           => $mysql_home,
       managehome     => $create_mysql_home,
@@ -136,18 +132,6 @@ class profile_mysql_server (
       shell          => '/sbin/nologin',
       comment        => 'MySQL server',
     }
-
-  #} elsif $mysql_gid {
-
-    # we've specified $mysql_gid but NOT $mysql_uid
-    #fail('you must provide both (or neither) mysql_gid and mysql_uid')
-
-  #} elsif $mysql_uid {
-
-    # we've specified $mysql_uid but NOT $mysql_gid
-    #fail('you must provide both (or neither) mysql_gid and mysql_uid')
-
-  #}
 
   $other_dependencies.each | $dep | {
     $dep -> Class['::mysql::server::install']
