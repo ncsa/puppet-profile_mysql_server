@@ -113,11 +113,11 @@ class profile_mysql_server (
       }
     }
 
-    group { $mysql_groupname:
-      ensure => 'present',
-      before => Class['::mysql::server::install'],
-      gid    => $mysql_groupname,
-    }
+#    group { $mysql_groupname:
+#      ensure => 'present',
+#      before => Class['::mysql::server::install'],
+#      gid    => $mysql_groupname,
+#    }
 
     user { $mysql_username:
       ensure         => 'present',
