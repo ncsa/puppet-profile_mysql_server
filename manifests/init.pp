@@ -113,17 +113,17 @@ class profile_mysql_server (
       }
     }
 
-#    group { $mysql_groupname:
-#      ensure => 'present',
-#      before => Class['::mysql::server::install'],
-#      gid    => $mysql_groupname,
-#    }
+    group { $mysql_groupname:
+      ensure => 'present',
+      before => Class['::mysql::server::install'],
+      gid    => 27,
+    }
 
     user { $mysql_username:
       ensure         => 'present',
       before         => Class['::mysql::server::install'],
-      uid            => $mysql_username,
-      gid            => $mysql_groupname,
+      uid            => 27,
+      gid            => 27,
       forcelocal     => true,
       home           => $mysql_home,
       managehome     => $create_mysql_home,
