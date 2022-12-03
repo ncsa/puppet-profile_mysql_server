@@ -127,5 +127,6 @@ Other depencies to handle prior to other MySQL setup, specified as resources, e.
 
 Data type: `Hash`
 
-Raw params for a yumrepo resource from which to install MySQL/MariaDB.
+Raw params containing a yumrepo resource (or multiple yumrepo resources) from which
+to install MySQL/MariaDB.
 

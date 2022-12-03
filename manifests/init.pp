@@ -52,7 +52,8 @@
 #     - "Mount['/var/lib/mysql']"
 #
 # @param yumrepo
-#   Raw params for a yumrepo resource from which to install MySQL/MariaDB.
+#   Raw params containing a yumrepo resource (or multiple yumrepo resources) from which
+#   to install MySQL/MariaDB.
 #
 # @example
 #   include profile_mysql_server
@@ -161,7 +162,9 @@ class profile_mysql_server (
       }
       ensure_resources( 'yumrepo', $yumrepo, $yumrepo_defaults )
     }
-    Yumrepo[$yumrepo] -> Class['::mysql::server::install']
+    keys($yumrepo).each | $repo | {
+      Yumrepo[$repo] -> Class['::mysql::server::install']
+    }
   }
 
   each($dbs) | $db_name, $db_data | {
