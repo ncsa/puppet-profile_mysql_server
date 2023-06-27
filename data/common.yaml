@@ -11,3 +11,6 @@ profile_mysql_server::mysql_uid: null
 profile_mysql_server::mysql_username: "mysql"
 profile_mysql_server::other_dependencies: []
 profile_mysql_server::yumrepo: {}
+profile_mysql_server::backup::backup_cmd: "/usr/bin/mysqldump"
+profile_mysql_server::backup::backup_cmd_options: "--single-transaction"
+profile_mysql_server::backup::databases: []

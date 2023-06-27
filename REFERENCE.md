@@ -7,6 +7,7 @@
 ### Classes
 
 * [`profile_mysql_server`](#profile_mysql_server): Manage a MySQL/MariaDB server configuration.
+* [`profile_mysql_server::backup`](#profile_mysql_serverbackup): Add a backup job to backup databases via profile_backup.
 
 ## Classes
 
@@ -125,8 +126,48 @@ Other depencies to handle prior to other MySQL setup, specified as resources, e.
 
 ##### <a name="yumrepo"></a>`yumrepo`
 
-Data type: `Hash`
+Data type: `Optional[Hash]`
 
 Raw params containing a yumrepo resource (or multiple yumrepo resources) from which
 to install MySQL/MariaDB.
+
+### <a name="profile_mysql_serverbackup"></a>`profile_mysql_server::backup`
+
+Add a backup job to backup databases via profile_backup.
+
+#### Examples
+
+##### 
+
+```puppet
+include profile_mysql_server::backup
+```
+
+#### Parameters
+
+The following parameters are available in the `profile_mysql_server::backup` class:
+
+* [`backup_cmd`](#backup_cmd)
+* [`backup_cmd_options`](#backup_cmd_options)
+* [`databases`](#databases)
+
+##### <a name="backup_cmd"></a>`backup_cmd`
+
+Data type: `String`
+
+Command used to backup the database. Output to STDOUT.
+Generally mysqldump.
+
+##### <a name="backup_cmd_options"></a>`backup_cmd_options`
+
+Data type: `String`
+
+Options to add to the command to dump the database
+An example would be --single-transaction.
+
+##### <a name="databases"></a>`databases`
+
+Data type: `Array[String]`
+
+A list of databases to backup. Default is back up all databases
 

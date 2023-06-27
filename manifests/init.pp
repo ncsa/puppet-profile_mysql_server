@@ -69,20 +69,23 @@ class profile_mysql_server (
   String            $mysql_rundir,
   String            $mysql_username,
   Array             $other_dependencies,
-  Hash              $yumrepo,
+  Optional[Hash]    $yumrepo,
   Optional[Integer] $mysql_gid,
   Optional[Integer] $mysql_uid,
 
 ) {
+  include mysql::server
 
-  include ::mysql::server
+  if ( lookup('profile_backup::client::enabled') ) {
+    include profile_mysql_server::backup
+  }
 
   if ($mysql_gid) and ($mysql_uid) {
     # if both $mysql_gid and $mysql_uid, create various directories
     # and manage user and group
 
     $dir_defaults = {
-      before => Class['::mysql::server::install'],
+      before => Class['mysql::server::install'],
       ensure => directory,
       group  => $mysql_gid,
       owner  => $mysql_uid,
@@ -104,7 +107,7 @@ class profile_mysql_server (
       $dirparts = reject( split( $mysql_home, '/' ), '^$' )
       $numparts = size( $dirparts )
       if ( $numparts > 1 ) {
-        each( Integer[2,$numparts] ) |$i| {
+        each(Integer[2,$numparts]) |$i| {
           ensure_resource(
             'file',
             reduce( Integer[2,$i], $mysql_home ) |$memo, $val| { dirname( $memo ) },
@@ -120,13 +123,13 @@ class profile_mysql_server (
 
     group { $mysql_groupname:
       ensure => 'present',
-      before => Class['::mysql::server::install'],
+      before => Class['mysql::server::install'],
       gid    => $mysql_gid,
     }
 
     user { $mysql_username:
       ensure         => 'present',
-      before         => Class['::mysql::server::install'],
+      before         => Class['mysql::server::install'],
       uid            => $mysql_uid,
       gid            => $mysql_gid,
       forcelocal     => true,
@@ -137,21 +140,17 @@ class profile_mysql_server (
       shell          => '/sbin/nologin',
       comment        => 'MySQL server',
     }
-
-  } elsif $mysql_gid {
-
+  }
+  elsif $mysql_gid {
     # we've specified $mysql_gid but NOT $mysql_uid
     fail('you must provide both (or neither) mysql_gid and mysql_uid')
-
-  } elsif $mysql_uid {
-
+  }
+  elsif $mysql_uid {
     # we've specified $mysql_uid but NOT $mysql_gid
     fail('you must provide both (or neither) mysql_gid and mysql_uid')
-
   }
-
   $other_dependencies.each | $dep | {
-    $dep -> Class['::mysql::server::install']
+    $dep -> Class['mysql::server::install']
   }
 
   if ! empty($yumrepo) {
@@ -163,7 +162,7 @@ class profile_mysql_server (
       ensure_resources( 'yumrepo', $yumrepo, $yumrepo_defaults )
     }
     keys($yumrepo).each | $repo | {
-      Yumrepo[$repo] -> Class['::mysql::server::install']
+      Yumrepo[$repo] -> Class['mysql::server::install']
     }
   }
 
@@ -172,5 +171,4 @@ class profile_mysql_server (
       * => $db_data,
     }
   }
-
 }
